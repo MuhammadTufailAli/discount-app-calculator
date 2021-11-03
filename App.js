@@ -34,7 +34,8 @@ export default function App() {
 
      <TouchableOpacity
      onPress={()=>{setsave(OPrice*(DPrice/100))
-    setfprice(OPrice-save)}}
+    setfprice(OPrice-(OPrice*(DPrice/100)))
+  }}
      >
 <Text style={styles.button}>Calculate</Text>
      </TouchableOpacity>
