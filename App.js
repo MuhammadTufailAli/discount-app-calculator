@@ -3,10 +3,18 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput , TouchableOpacity} from 'react-native';
 
 export default function App() {
-  const [OPrice,setOPrice]=React.useState();
+  const [OPrice,setOPrice]=React.useState('0');
   const [DPrice,setDPrice]=React.useState();
   const [save,setsave]=React.useState();
   const [fprice,setfprice]=React.useState();
+
+  function calculate(OP,DP){
+    setsave(OP*(DP/100));
+    setfprice(OP-OP*(DP/100));
+  }
+
+
+  
   return (
     
     <View style={styles.container}>
@@ -33,9 +41,7 @@ export default function App() {
       <Text style={{padding:10, fontWeight:'bold'}}>Final Price:{fprice} </Text>
 
      <TouchableOpacity
-     onPress={()=>{setsave(OPrice*(DPrice/100))
-    setfprice(OPrice-(OPrice*(DPrice/100)))
-  }}
+     onPress={()=>calculate(OPrice,DPrice)}
      >
 <Text style={styles.button}>Calculate</Text>
      </TouchableOpacity>
