@@ -1,17 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TextInput , TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, TextInput , TouchableOpacity,Modal} from 'react-native';
+import { Button } from 'react-native-web';
 
 export default function App() {
-  const [OPrice,setOPrice]=React.useState('0');
+  const [OPrice,setOPrice]=React.useState();
   const [DPrice,setDPrice]=React.useState();
   const [save,setsave]=React.useState();
   const [fprice,setfprice]=React.useState();
+  const [getarrayobj,setarrayobj]=React.useState([]);
+  var [getmodel,setmodel]=React.useState(false);
 
-  function calculate(OP,DP){
-    setsave(OP*(DP/100));
-    setfprice(OP-OP*(DP/100));
-  }
+  
 
 
   
@@ -20,31 +20,88 @@ export default function App() {
     <View style={styles.container}>
       
       <StatusBar style="auto" />
-      
 
+      <Modal
+      
+      visible={getmodel}>
+        <Text>{
+          getarrayobj.map(obj=>
+            <Text>Original Price:{obj.originalPrice}{'\n'} Discount Price :{obj.DiscountPrice} {'\n'} Final price:{obj.FinalPrice} {'\n'} {'\n'}</Text>
+              )
+          
+          }</Text>
+          <Button
+          title="Close"
+          onPress={()=>{setmodel(false)}}/>
+
+      </Modal>
+      
+    
       
       <TextInput placeholder='Original price' 
       style={styles.input}
-      keyboardType='numeric'
+      keyboardType='numeric-pad'
+      
       defaultValue={OPrice}
-      onChangeText={(text)=>{setOPrice(text)}}
+      onChangeText={
+        (text)=>{
+          if(text<0){
+            alert("Number must be positive");
+          }
+          else if(text>=0){
+            setOPrice(text)
+          }
+          else{
+            alert("Input must be number")
+          }
+          
+        }
+        }
       />
          
       
       <TextInput
       placeholder='Discount percentage' style={styles.input}
       defaultValue={DPrice}
-      onChangeText={(text)=>{setDPrice(text)}}
+      keyboardType='numeric-pad'
+      onChangeText={(text)=>{if(text>100){
+        alert("Discount can not be greater than 100");
+      }
+      else{
+        {setDPrice(text)}
+      }
+    }
+      
+    }
       />
 
       <Text style={{padding:10, fontWeight:'bold'}}>You Saved: {save} </Text>
       <Text style={{padding:10, fontWeight:'bold'}}>Final Price:{fprice} </Text>
 
      <TouchableOpacity
-     onPress={()=>calculate(OPrice,DPrice)}
+     onPress={()=>{
+       
+       setsave(OPrice*(DPrice/100));
+    setfprice(OPrice-OPrice*(DPrice/100));
+       
+
+        setarrayobj(prevObj => [...prevObj,{originalPrice:OPrice,DiscountPrice:DPrice,FinalPrice:OPrice-OPrice*(DPrice/100)}]);
+      
+       
+      }}
      >
-<Text style={styles.button}>Calculate</Text>
+        <Text style={styles.button}>Calculate</Text>
      </TouchableOpacity>
+
+     <Text>{'\n'}</Text>
+
+     <TouchableOpacity
+     onPress={()=>setmodel(true)}
+     >
+        <Text style={styles.button}>Save</Text>
+     </TouchableOpacity>
+
+     
       
       
       
